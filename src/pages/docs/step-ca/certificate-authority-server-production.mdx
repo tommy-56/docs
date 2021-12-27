@@ -23,6 +23,7 @@ should know about when running `step-ca` as a certificate authority server.
 - [Running `step-ca` as a Daemon](#running-step-ca-as-a-daemon)
 - [High Availability](#high-availability)
 - [Load balancing or proxying `step-ca` traffic](#load-balancing-or-proxying-step-ca-traffic)
+- [Running `step-ca` on a Public IP](#running-step-ca-on-a-public-ip)
 - [Automate X.509 Certificate Lifecycle Management](#automate-x509-certificate-lifecycle-management)
 - [X.509 Certificate Revocation](#x509-certificate-revocation)
 - [Sane Cryptographic Defaults](#sane-cryptographic-defaults)
@@ -377,6 +378,29 @@ Layer 7 proxying is _not recommended_, becase the `step` toolchain is built arou
   But it comes with a price: Unlike typical reverse proxy configurations, source IPs are not visible to `step-ca` (there is no `X-Forwarded-For` header), and traffic is also not logged to the nginx access log.
   See [this blog post](https://gerco.dev/NGINX-Reverse-Proxy-with-TLS-Passthrough/) for an example of TLS passthrough.
 - Caddy doesn't natively support TLS passthrough, but there is an experimental [`caddy-l4`](https://github.com/mholt/caddy-l4) module that can do it.
+
+## Running `step-ca` on a Public IP
+
+You can run `step-ca` on a public IP, but you need to add some additional protections to your configuration:
+
+- If you're using an OIDC provisioner,
+add the `domains` configuration property to limit the token email domains that will be accepted by the CA.
+Do not link the OIDC provisioner to a public email domain like `gmail.com`.
+- If you're using any cloud provisioners,
+restrict the accounts that can use IIDs to get certificates:
+  - For GCP, use the `serviceAccounts` and `projectIDs` properties.
+  - For AWS, use the `accountId` property.
+  - For Azure, use the `tenantId` and `resourceGroups` properties.
+- To allow clients to bootstrap, `step-ca` makes some information public:
+  - The provisioner configurations (at `/provisioners`)
+  - Your root certificate chain
+  - The health check endpoint (`/health`).
+- If you're using the JWK provisioner, the encrypted key is public, so it is critical that you use a strong password for it. Optionally, you can remove the JWK `encryptedKey` from the CA's publicly-accessible provisioner configuration. While the `encryptedKey` improves the client UX, is not required for CA operation. If removed, clients will need to pass in the key via `step ca token --key=jwk.key`
+
+As an alternative to publicly hosting `step-ca`, you can tunnel `step-ca` traffic using TLS-over-mutual TLS.
+This is a more secure configuration, but with security comes complexity.
+This is an experimental feature that uses [`ghostunnel`](https://github.com/ghostunnel/ghostunnel).
+See [certificates#531](https://github.com/smallstep/certificates/pull/531) for details.
 
 ## Automate X.509 Certificate Lifecycle Management
 
@@ -937,7 +961,7 @@ $ TOKEN=$(step ca token --revoke 59636004850364466675608080466579278406)
 $ echo $TOKEN | step crypto jwt inspect --insecure
 {
 "header": {
-    "alg": "ES256",
+    "alg": "ES256", See 
     "kid": "uxEunU9UhUo96lRvKgpEtRevkzbN5Yq88AFFtb1nSGg",
     "typ": "JWT"
 },
