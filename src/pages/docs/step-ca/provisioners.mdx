@@ -149,6 +149,7 @@ Example claims:
     "maxTLSCertDuration": "24h",
     "defaultTLSCertDuration": "24h",
     "disableRenewal": false,
+    "allowRenewAfterExpiry": false,
     "minHostSSHCertDuration": "5m",
     "maxHostSSHCertDuration": "1680h",
     "minUserSSHCertDuration": "5m",
@@ -158,29 +159,35 @@ Example claims:
 ...
 ```
 
-**X.509 CA properties**
+**General Properties**
 
-- **minTLSCertDuration**: do not allow certificates with a duration less than this value.
+- `disableRenewal`: disables renewal of certificates using [`step ca renew`](/docs/step-cli/reference/ca/renew) or [`step ssh renew`](/docs/step-cli/reference/ssh/renew) (default `false`)
 
-- **maxTLSCertDuration**: do not allow certificates with a duration greater than this value.
+- `allowRenewAfterExpiry`: allows renewal of expired certificates using [`step ca renew`](/docs/step-cli/reference/ca/renew) or [`step ssh renew`](/docs/step-cli/reference/ssh/renew) (default `false`)
 
-- **defaultTLSCertDuration**: if no certificate validity period is specified, use this value.
+**X.509 CA Properties**
 
-**SSH CA properties**
+- `minTLSCertDuration`: do not allow certificates with a duration less than this value.
 
-- **minUserSSHCertDuration**: do not allow certificates with a duration less than this value.
+- `maxTLSCertDuration`: do not allow certificates with a duration greater than this value.
 
-- **maxUserSSHCertDuration**: do not allow certificates with a duration greater than this value.
+- `defaultTLSCertDuration`: if no certificate validity period is specified, use this value.
 
-- **defaultUserSSHCertDuration**: if no certificate validity period is specified, use this value.
+**SSH CA Properties**
 
-- **minHostSSHCertDuration**: do not allow certificates with a duration less than this value.
+- `minUserSSHCertDuration`: do not allow certificates with a duration less than this value.
 
-- **maxHostSSHCertDuration**: do not allow certificates with a duration greater than this value.
+- `maxUserSSHCertDuration`: do not allow certificates with a duration greater than this value.
 
-- **defaultHostSSHCertDuration**: if no certificate validity period is specified, use this value.
+- `defaultUserSSHCertDuration`: if no certificate validity period is specified, use this value.
 
-- **enableSSHCA**: enable this provisioner to generate SSH Certificates. The default value is false.
+- `minHostSSHCertDuration`: do not allow certificates with a duration less than this value.
+
+- `maxHostSSHCertDuration`: do not allow certificates with a duration greater than this value.
+
+- `defaultHostSSHCertDuration`: if no certificate validity period is specified, use this value.
+
+- `enableSSHCA`: enable this provisioner to generate SSH Certificates. (default `false`).
 
 #### Options
 
