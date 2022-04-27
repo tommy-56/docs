@@ -89,18 +89,37 @@ Sometimes it's useful to access a local CA offline, without running the `step-ca
 For this purpose, the `step` CLI can be used in _offline mode_ (with the `--offline` flag).
 Offline mode uses the configuration, database, certificates, and keys of an existing `step-ca` installation.
 
-This table shows some of the feature differences between an online `step-ca` server, `step` CLI in offline mode, and the [`step certificate` subcommand](https://smallstep.com/docs/step-cli/basic-crypto-operations#run-an-offline-x509-certificate-authority).
+This table shows some of the feature differences between an online `step-ca` server, `step` CLI in offline mode, and the [`step certificate` subcommand](/docs/step-cli/reference/certificate).
 
 ![](/graphics/cas-three-ways.png)
 
 ### Example: Offline Mode
 
-Let's create a certificate without `step-ca`:
+Let's create a certificate without running `step-ca`.
+First, initialize a `step-ca` PKI:
 
-```shell-session nocopy
-$ step ca init --name "Local CA" --provisioner admin --dns localhost --address ":443"
-$ step ca certificate --offline foo.smallstep.com foo.crt foo.key
+```shell-session
+step ca init --name "Local CA" --provisioner admin --dns localhost --address ":443"
 ```
+
+Now, without starting `step-ca`, you can get a certificate using offline mode:
+
+```shell-session
+step ca certificate --offline foo.smallstep.com foo.crt foo.key
+```
+
+### Example: `step certificate`
+
+You can also use the [`step certificate` subcommand](/docs/step-cli/reference/certificate) to create CAs and leaf certificates offline, without initializing a PKI or running a `step-ca` server.
+
+For example, you can use [`step certificate`](/docs/step-cli/reference/certificate) to create a self-signed leaf certificate:
+
+```shell-session
+step certificate create example.com example.crt example.key \
+   --profile self-signed --subtle
+```
+
+See the [Basic Crypto Operations](/docs/step-cli/basic-crypto-operations) section of the `step` CLI documentation for more examples.
 
 ## Next Steps
 
