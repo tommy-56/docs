@@ -472,10 +472,10 @@ A few things to consider / implement when running multiple instances of `step-ca
 
 ## Load balancing or proxying `step-ca` traffic
 
-If you need to place a load balancer or reverse proxy downstream from the CA, we recommend using layer 4 (TCP)
-load balancing or proxying (aka "TLS passthrough").
+If you need to place a load balancer or reverse proxy downstream from the CA,
+we recommend using layer 4 (TCP) load balancing or proxying (aka "TLS passthrough").
 
-Layer 7 proxying is _not recommended_, becase the `step` toolchain is built around TLS:
+Layer 7 proxying is _not recommended_, because the `step` toolchain is built around TLS:
 - `step` expects to be able to establish a TLS connection directly with `step-ca` using the CA's root certificate.
 - Certificate renewal requires authenticated encryption (mutual TLS).
   `step-ca` authenticates the client using the expiring certificate, in order to issue a new one.
@@ -486,6 +486,8 @@ Layer 7 proxying is _not recommended_, becase the `step` toolchain is built arou
 
   That said, lots of folks have legacy issues to contend with, some of these decisions are out of their control, and every threat model is different.
   See [certificates#246](https://github.com/smallstep/certificates/issues/246) for more details.
+
+Finally, when load balancing, your `step-ca` instances should share a single MySQL or PostgreSQL database.
 
 ### Further Reading
 
