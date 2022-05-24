@@ -19,8 +19,7 @@ jobs:
         with:
           node-version: '14'
           cache: 'yarn'
-        env: # Or as an environment variable
-          super_secret: ${{ secrets.SuperSecret }}
+        
       -
         id: install
         run: yarn install
@@ -31,6 +30,8 @@ jobs:
       
       -
         id: build
+        env: # Or as an environment variable
+          super_secret: ${{ secrets.SuperSecret }}
         run: yarn build
       
       
