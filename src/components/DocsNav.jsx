@@ -81,7 +81,7 @@ const DocsNav = ({ pathname, submenusRef }) => {
       ));
   };
   const searchIndices = [
-    { name: `IndexOfPages_Replica`, title: `IndexOfPages_Replica` },
+    { name: `dev_actions_Test`, title: `dev_actions_Test` },
   ];
   return (
     <>
