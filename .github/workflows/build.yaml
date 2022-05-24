@@ -28,8 +28,8 @@ jobs:
         run: yarn lint
       
       -
-      id: lint
-      run: yarn build
+        id: build
+        run: yarn build
       
       
 
