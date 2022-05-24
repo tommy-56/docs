@@ -2,7 +2,7 @@ const escapeStringRegexp = require('escape-string-regexp');
 const { default: slugify } = require('slugify');
 
 const pagePath = `pages/`; //path to the docs pages /pages/docs/ect...
-const indexName = `IndexOfPages_Replica`; //Algolia querie index name
+const indexName = `dev_actions_Test`; //Algolia querie index name
 
 const pageQuery = `{
   pages: allMdx(
