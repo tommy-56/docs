@@ -19,7 +19,7 @@ Automatically manage certificates on internal websites, servers, and the entire 
 </Alert>
 
 ### About ACME
-At a high level, ACME is pretty simple. An ACME client creates an account with an ACME server and submits a certificate order. The server responds with a set of challenges for the client to complete to prove control over identifiers (domain names) in the certificate. Once the client successfully completes these challenges, it submits a certificate signing request (CSR) and the server issues a certificate.
+At a high level ACME is pretty simple. An ACME client creates an account with an ACME server and submits a certificate order. The server responds with a set of challenges for the client to complete to prove control over identifiers (domain names) in the certificate. Once the client successfully completes these challenges, it submits a certificate signing request (CSR) and the server issues a certificate.
 
 The most interesting part of all of this is the challenge – where the client proves control over an identifier. There is no single standard way to “prove control” over an “identifier”, so the core ACME specification makes this an extension point. Smallstep supports all the popular ACME challenges including DNS, HTTP, ALPN, IP, and EAB configurations. 
 
