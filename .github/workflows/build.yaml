@@ -27,7 +27,6 @@ jobs:
       -
         id: lint
         run: yarn lint
-      
       -
         id: build
         env: # Or as an environment variable
