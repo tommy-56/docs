@@ -28,6 +28,7 @@ jobs:
         id: lint
         run: yarn lint
       -
+      
         id: build
         env: # Or as an environment variable
           GATSBY_ALGOLIA_APP_ID: ${{ secrets.ID }}
