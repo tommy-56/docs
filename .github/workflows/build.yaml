@@ -22,12 +22,12 @@ jobs:
       -
         id: install
         run: yarn install
+        run: yarn build
       -
         id: lint
         run: yarn lint
-      -
-      id: build
-      run: yarn build
+      
+      
 
   deploy:
     if: github.ref == 'refs/heads/main'
