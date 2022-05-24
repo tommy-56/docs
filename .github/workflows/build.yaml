@@ -31,7 +31,7 @@ jobs:
       -
         id: build
         env: # Or as an environment variable
-          super_secret: ${{ secrets.SuperSecret }}
+          GATSBY_ALGOLIA_APP_ID: ${{ secrets.INDEX }}
         run: yarn build
       
       
