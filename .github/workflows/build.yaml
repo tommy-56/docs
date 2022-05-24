@@ -19,6 +19,10 @@ jobs:
         with:
           node-version: '14'
           cache: 'yarn'
+        env: # Or as an environment variable
+          GATSBY_ALGOLIA_APP_ID: ${{ secrets.ID }}
+          GATSBY_ALGOLIA_SEARCH_KEY: ${{ secrets.SEARCH}}
+          ALGOLIA_ADMIN_KEY: ${{ secrets.AD}}
         
       -
         id: install
@@ -30,10 +34,7 @@ jobs:
       
       -
         id: build
-        env: # Or as an environment variable
-          GATSBY_ALGOLIA_APP_ID: ${{ secrets.ID }}
-          GATSBY_ALGOLIA_SEARCH_KEY: ${{ secrets.SEARCH}}
-          ALGOLIA_ADMIN_KEY: ${{ secrets.AD}}
+        
         run: yarn build
       
       
