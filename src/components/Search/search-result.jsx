@@ -1,7 +1,8 @@
 import { Link } from 'gatsby';
 import { default as React } from 'react';
 import { Tile, Paragraph } from '@smallstep/step-ui';
-
+import { makeStyles } from '@material-ui/styles';
+import { Box } from '@material-ui/core';
 import {
   connectStateResults,
   Highlight,
@@ -10,10 +11,20 @@ import {
   Snippet,
 } from 'react-instantsearch-dom';
 
+const useStyles = makeStyles({
+  hits: {
+    marginLeft: -30,
+    marginRight: 10,
+    '& ul ': {
+      listStyle: 'none',
+    },
+  },
+});
+
 const HitCount = connectStateResults(({ searchResults }) => {
   const hitCount = searchResults && searchResults.nbHits;
 
-  return hitCount > 0 ? (
+  return hitCount >= 0 ? (
     <div className="HitCount">
       {hitCount} result{hitCount !== 1 ? `s` : ``}
     </div>
@@ -21,7 +32,7 @@ const HitCount = connectStateResults(({ searchResults }) => {
 });
 
 const PageHit = ({ hit }) => (
-  <div>
+  <Box mb={1}>
     <Tile>
       <Link
         to={
@@ -36,15 +47,22 @@ const PageHit = ({ hit }) => (
       </Link>
       <Snippet attribute="excerpt" hit={hit} tagName="mark" />
     </Tile>
-  </div>
+  </Box>
 );
 
-const HitsInIndex = ({ index }) => (
-  <Index indexName={index.name}>
-    <HitCount />
-    <Hits className="Hits" hitComponent={PageHit} />
-  </Index>
-);
+function HitsInIndex({ index }) {
+  const classes = useStyles();
+  return (
+    <Index indexName={index.name}>
+      <Box ml={1.6} mt={-1.6} mb={-1.6}>
+        <h4>
+          <HitCount />
+        </h4>
+      </Box>
+      <Hits className={classes.hits} hitComponent={PageHit} />
+    </Index>
+  );
+}
 
 const SearchResult = ({ indices, className }) => (
   <div className={className}>
