@@ -1,7 +1,13 @@
 import algoliasearch from 'algoliasearch/lite';
-import { createRef, default as React, useState, useMemo } from 'react';
+import { default as React, useState, useMemo } from 'react';
 import { InstantSearch } from 'react-instantsearch-dom';
-import { ThemeProvider, makeStyles, Box, Popover } from '@material-ui/core';
+import {
+  ThemeProvider,
+  makeStyles,
+  Box,
+  List,
+  ClickAwayListener,
+} from '@material-ui/core';
 import SearchBox from './search-box';
 import SearchResult from './search-result';
 
@@ -10,19 +16,22 @@ const useStyles = makeStyles({
     background: 'white',
   },
   popover: {
-    borderRadius: 15,
-    height: '80%',
-    width: '31.6%',
+    background: 'white',
+    position: 'relative',
+    maxHeight: 750,
+    width: 'auto',
+    height: 'auto',
+    overflow: 'scroll',
+    overflowX: 'hidden',
     boxShadow: 5,
-    marginTop: 15,
   },
   hits: {
-    width: 350,
+    borderRadius: 3,
+    borderColor: '#D3D3D3',
   },
 });
 
 export default function Search({ indices }) {
-  const rootRef = createRef();
   const [query, setQuery] = useState();
   const searchClient = useMemo(
     () =>
@@ -32,55 +41,41 @@ export default function Search({ indices }) {
       ),
     []
   );
-
   const theme = useStyles();
-  const [hasFocus, setFocus] = useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [open, setOpen] = React.useState(false);
   const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-    setFocus(true);
+    setOpen(true);
   };
   const handleClose = () => {
-    setAnchorEl(null);
-    setFocus(false);
+    setOpen(false);
   };
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
   return (
     <ThemeProvider theme={theme.root}>
-      <Box ref={rootRef} mb={1.6}>
-        <InstantSearch
-          searchClient={searchClient}
-          indexName={indices[0].name}
-          onSearchStateChange={({ query }) => setQuery(query)}
-        >
-          <SearchBox onInput={handleClick} />
-          {hasFocus ? (
-            <Popover
-              className={theme.popover}
-              id={id}
-              open={open}
-              anchorEl={anchorEl}
-              onClose={handleClose}
-              disableAutoFocus={true}
-              disableEnforceFocus={true}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-            >
-              <SearchResult
-                className={theme.hits}
-                show={query && query.length > 0 && hasFocus}
-                indices={indices}
-              />
-            </Popover>
-          ) : null}
-        </InstantSearch>
+      <Box mb={2}>
+        <ClickAwayListener onClickAway={handleClose}>
+          <InstantSearch
+            searchClient={searchClient}
+            indexName={indices[0].name}
+            onSearchStateChange={({ query }) => setQuery(query)}
+          >
+            <SearchBox onInput={handleClick} />
+            {window.addEventListener('resize', handleClose)}
+            {open ? (
+              <Box border={1} mr={3} mt={2} className={theme.hits}>
+                <List
+                  className={theme.popover}
+                  disableAutoFocus={true}
+                  disableEnforceFocus={true}
+                >
+                  <SearchResult
+                    show={query && query.length > 0 && open}
+                    indices={indices}
+                  />
+                </List>
+              </Box>
+            ) : null}
+          </InstantSearch>
+        </ClickAwayListener>
       </Box>
     </ThemeProvider>
   );
